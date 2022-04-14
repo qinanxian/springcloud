@@ -1,11 +1,13 @@
 package com.lih.userserver.controller;
 
 import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.lih.userserver.entity.User;
 import com.lih.userserver.mapper.UserMapper;
 import com.lih.userserver.service.UserService;
 import com.lih.userserver.util.JsonUtil;
+import com.lih.userserver.util.ReturnResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -42,10 +44,9 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/insterUser")
-    public String userTest(@RequestBody JsonNode jsonNode) throws Exception {
-        User user = JsonUtil.getJavaFromJson(jsonNode, User.class);
-        userService.insertUser(user);
-        return "2";
+    public JsonNode userTest(@RequestBody JsonNode jsonNode) throws Exception {
+        return userService.insertUser(jsonNode);
+
     }
 
 
