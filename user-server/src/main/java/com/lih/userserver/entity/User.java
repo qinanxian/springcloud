@@ -1,5 +1,6 @@
 package com.lih.userserver.entity;
 
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -11,21 +12,21 @@ public class User implements Serializable,Cloneable{
     /** id */
     @Id
     @GeneratedValue(generator = "JDBC")
-    private String id ;
+    private String id;
     /** 姓名 */
-    private String name ;
+    private String name;
     /** 身份证 */
-    private String cardid ;
+    private String cardid;
     /** 手机号 */
-    private String phone ;
+    private String phone;
     /** 住址 */
-    private String address ;
+    private String address;
     /** 出生日期 */
-    private String birth ;
+    private String birth;
     /** 登录密码 */
-    private String accountPassword ;
+    private String accountPassword;
     /** 登录账号 */
-    private String accountNumber ;
+    private String accountNumber;
 
     /** id */
     public String getId(){

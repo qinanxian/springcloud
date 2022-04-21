@@ -1,61 +1,79 @@
 package com.lih.userserver.util;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ReturnResult {
+    private static Logger logger = LoggerFactory.getLogger(ReturnResult.class);
+
+    public static String FAIL = "FAIL";
+    public static String SUCCESS = "SUCCESS";
+    private static String MSG_FAIL = "系统出错啦，请稍后再试哦";
+    private static String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
     /**
-     *1.成功 2.失败
+     *success.成功 fail.失败
      */
     private String code;
     /**
-     * success.成功 fail.失败
+     *
      */
-    private String success;
+    private String message;
     /**
      *返回信息
      */
-    private String message;
+    private Object body;
+    private String repTime;
 
-    public ReturnResult(){
-        this.code="1";
-        this.success="success";
-        this.message="";
+    public JsonNode toJson() {
+        JsonNode nReturn = JsonUtil.getJson();
+        try {
+            JsonUtil.setJsonStringValue(nReturn, "header.code", this.code);
+            JsonUtil.setJsonStringValue(nReturn, "header.message", this.message);
+            this.repTime = DateUtil.getNowTime(DATE_FORMAT);
+            JsonUtil.setJsonStringValue(nReturn, "footer.repTime", this.repTime);
+            if (body != null) {
+                if (body instanceof JsonNode) {
+                    JsonUtil.setJsonValue(nReturn, "body", (JsonNode) body);
+                } else if (body instanceof Double) {
+                    JsonUtil.setJsonDoubleValue(nReturn, "body", (Double) body);
+                } else if (body instanceof Integer) {
+                    JsonUtil.setJsonIntValue(nReturn, "body", (Integer) body);
+                } else {
+                    JsonUtil.setJsonStringValue(nReturn, "body", body.toString());
+                }
+            }
+        } catch (Exception e) {
+            logger.error("数据返回异常！", e);
+        }
+
+        return nReturn;
     }
 
-    public ReturnResult(String code,String success,String message){
-        this.code="1";
-        this.success="success";
-        this.message="";
+
+
+
+    public void fail() {
+        this.code = FAIL;
+        this.message = MSG_FAIL;
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getSuccess() {
-        return success;
-    }
-
-    public void setSuccess(String success) {
-        this.success = success;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
+    public void fail(String message) {
+        this.code = FAIL;
         this.message = message;
     }
 
-    @Override
-    public String toString() {
-        return "ReturnResult{" +
-                "code=" + code +
-                ", success='" + success + '\'' +
-                ", message='" + message + '\'' +
-                '}';
+    public void success(String msg) {
+        this.code = SUCCESS;
+        this.message = msg;
     }
+
+    public void success(String msg, Object body) {
+        this.code = SUCCESS;
+        this.message = msg;
+        this.body = body;
+    }
+
+
 }

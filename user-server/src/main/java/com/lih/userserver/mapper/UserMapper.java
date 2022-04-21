@@ -13,5 +13,5 @@ public interface UserMapper extends Mapper<User> {
     /**
      * 根据身份证号与手机号查询
      */
-    User getCardidAndPhone(@Param("cardid") String cardid, @Param("phone") String phone);
+    User getPhone(@Param("phone") String phone);
 }

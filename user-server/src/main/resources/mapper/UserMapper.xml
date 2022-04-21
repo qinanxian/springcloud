@@ -6,7 +6,7 @@
         select * from user
     </select>
 
-    <select id="getCardidAndPhone" resultType="com.lih.userserver.entity.User">
-        select * from user where cardid=#{cardid} and phone=#{phone}
+    <select id="getPhone" resultType="com.lih.userserver.entity.User">
+        select * from user where phone=#{phone}
     </select>
 </mapper>

@@ -6,6 +6,8 @@ import com.lih.userserver.controller.UserController;
 import com.lih.userserver.entity.User;
 import com.lih.userserver.mapper.UserMapper;
 import com.lih.userserver.util.JsonUtil;
+import com.lih.userserver.util.RedisUtil;
+import org.apache.commons.lang.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,7 +15,11 @@ import org.springframework.data.redis.core.RedisTemplate;
 import springfox.documentation.spring.web.json.Json;
 
 import javax.xml.ws.Action;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @SpringBootTest
 class UserServerApplicationTests {
@@ -24,20 +30,16 @@ class UserServerApplicationTests {
     UserController userController;
 
     @Autowired
-    RedisTemplate <String,String> redisTemplate;
+    RedisUtil redisUtil;
 
     @Test
     public void test() throws Exception {
-        String s="{\n" +
-                "    \"name\": \"李晖\",\n" +
-                "    \"cardid\": \"620522199604064614\",\n" +
-                "    \"accountNumber\": \"admin\",\n" +
-                "    \"accountPassword\": \"111111\",\n" +
-                "    \"phone\": \"15858268414\"\n" +
-                "}";
-        JsonNode json = JsonUtil.getJson(s);
-        JsonNode jsonNode = userController.userTest(json);
-        System.out.println(jsonNode);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("1","lihui");
+        map.put("2","lihui");
+        map.put("3","lihui");
+        double v = redisUtil.decrHash("12", "2", 1);
+        System.out.println(v);
     }
 
 }

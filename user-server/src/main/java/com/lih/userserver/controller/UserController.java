@@ -33,9 +33,8 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/loginUser")
-    public List<User> loginUser(@RequestBody JsonNode jsonNode){
-        List<User> user = userMapper.getUser();
-        return user;
+    public JsonNode loginUser(@RequestBody JsonNode jsonNode) throws Exception {
+        return userService.loginUser(jsonNode);
     }
 
     /**
