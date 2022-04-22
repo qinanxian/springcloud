@@ -135,9 +135,9 @@ public  class RedisUtil {
      * @param time 时间(秒)
      * @return true 成功 false失败
      */
-    public boolean insterHash(String key,String item,Object value, long time) {
+    public boolean insterHash(String redkey,String key,Object value, long time) {
         try {
-            redisTemplate.opsForHash().put(key, item, value);
+            redisTemplate.opsForHash().put(redkey, key, value);
             if(time>0){
                 redisTemplate.expire(key,time,TimeUnit.SECONDS);
             }
@@ -355,6 +355,21 @@ public  class RedisUtil {
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
+        }
+    }
+
+    /**
+     * 根据redisKey删除数据
+     * @param key
+     * @return
+     */
+    public boolean deleteKey(String key){
+        try {
+            redisTemplate.delete(key);
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
         }
     }
 }

@@ -19,7 +19,7 @@ import javax.annotation.PostConstruct;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+//@RequestMapping("/user")
 //@Api(tags = "用户相关接口")
 public class UserController {
     @Autowired
@@ -45,6 +45,17 @@ public class UserController {
     @RequestMapping(value = "/insterUser")
     public JsonNode userTest(@RequestBody JsonNode jsonNode) throws Exception {
         return userService.insertUser(jsonNode);
+
+    }
+
+    /**
+     * 退出接口
+     * @param fileId 用户id
+     * @return
+     */
+    @RequestMapping(value = "/quitUser/{id}")
+    public JsonNode quitUser(@PathVariable("id") String fileId) throws Exception {
+        return userService.quitUuser(fileId);
 
     }
 

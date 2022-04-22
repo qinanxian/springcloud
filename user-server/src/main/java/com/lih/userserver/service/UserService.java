@@ -18,4 +18,11 @@ public interface UserService {
      * @throws Exception 异常
      */
     JsonNode insertUser(JsonNode jsonNode) throws Exception;
+    /**
+     * 用户退出
+     * @param id 参数
+     * @return 返回值
+     * @throws Exception 异常
+     */
+    JsonNode quitUuser(String id) throws Exception;
 }

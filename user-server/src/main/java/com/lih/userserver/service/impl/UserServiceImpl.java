@@ -4,14 +4,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.lih.userserver.entity.User;
 import com.lih.userserver.mapper.UserMapper;
 import com.lih.userserver.service.UserService;
-import com.lih.userserver.util.CommonUtil;
-import com.lih.userserver.util.JsonUtil;
-import com.lih.userserver.util.ReturnResult;
-import com.lih.userserver.util.VerifyUtil;
+import com.lih.userserver.util.*;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Map;
 
 @Service
 @Transactional
@@ -19,6 +18,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    RedisUtil redisUtil;
 
     /**
      * 用户登录
@@ -35,7 +36,20 @@ public class UserServiceImpl implements UserService {
         //如果对象不等于null则说明改手机号已被注册 则校验密码
         if(user!=null){
             if(accountPassword.equals(user.getAccountPassword())){
-                returnResult.success("登录成功");
+                Map<String, Object> map = Utils.objectToMap(user);
+                for (String s : map.keySet()) {
+                    Object o = map.get(s);
+                    if(o==null){
+                        map.put(s,"");
+                    }
+                }
+                //将用户信息存入redis 做后续会话处理
+                boolean b = redisUtil.setHash(SessionUtil.RedisPreKey+ user.getId(),map,60);
+                if(b){
+                    returnResult.success("登录成功");
+                }else{
+                    returnResult.fail("登录异常");
+                }
             }else{
                 returnResult.fail("用户密码错误，请重新输入");
             }
@@ -77,6 +91,17 @@ public class UserServiceImpl implements UserService {
         }
         return returnResult.toJson();
     }
+
+    @Override
+    public JsonNode quitUuser(String id) throws Exception {
+        ReturnResult returnResult = new ReturnResult();
+        boolean b = redisUtil.deleteKey(SessionUtil.RedisPreKey + id);
+        if(b){
+          returnResult.success("删除成功");
+        }
+        return returnResult.toJson();
+    }
+
     //校验入参是否正确
     public boolean getVerify(User user,ReturnResult returnResult){
         if(StringUtils.isBlank(user.getName())){
